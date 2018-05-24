@@ -1,0 +1,20 @@
+[{
+    "id": 1,
+    "author": "Immortal Technique",
+    "government_name": "Felipe Andres Coronel",
+    "body": "The purpose of life is a life with a purpose. Rather die for what I believe in than live a life that is worthless.",
+    "photo": "immortal-technique.jpg"
+},
+{
+    "id": 2,
+    "author": "Eminem",
+    "government_name": "Marshall Mathers",
+    "body": "I don't rap for dead presidents. I'd rather see the president dead.",
+    "photo": "eminem.jpg"
+},
+{
+    "id": 3,
+    "author": "Andre 3000",
+    "body": "Hell just fell 3000 more degrees cooler but y'all can't measure my worth; and before you do, you'll need a ruler made by all the Greek gods.",
+    "photo": "andre-3k.jpg"
+}]
