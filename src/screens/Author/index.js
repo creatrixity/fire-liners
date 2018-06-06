@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Feed from '../../components/Feed';
 import {
     Box,
     Flex,
-    Heading
+    Text
 } from 'pcln-design-system';
-import { fetchLinersRequest, fetchAuthorsRequest } from './actions';
-import Feed from '../../components/Feed';
+import { fetchAuthorLinersRequest, fetchAuthorsRequest } from './actions';
 import { getAppState } from '../../containers/App/reducer';
-import { getLinersTotal } from '../../services/DataService';
+import { getAuthorLiners } from '../../services/DataService';
 
-
-class Home extends Component {
+class Author extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,18 +22,14 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        if (this.props.liners.length > 0) return;
-
-        let linersTotal = getLinersTotal();
 
         this.setState({
-            linersTotal
+            linersTotal: getAuthorLiners(this.getAuthor()).length
         })
 
-        if (this.props.liners.length >= linersTotal) return;
-
-        this.props.fetchLiners({
-            linersSetIndex: this.state.linersSetIndex
+        this.props.fetchAuthorLiners({
+            linersSetIndex: this.state.linersSetIndex,
+            author: this.getAuthor()
         })
     }
 
@@ -43,7 +38,7 @@ class Home extends Component {
             <Flex justify="center" alignItems="center">
 
               <Box width={[ 0.9, 0.8, 0.6 ]} p={3}>
-                  <Heading fontSize={3} mb={3} bold>Recent Quotes</Heading>
+                  <Text fontSize={3} mb={3} bold>All Quotes By {this.getAuthor().name}</Text>
 
                   <InfiniteScroll
                     dataLength={this.props.liners.length}
@@ -56,11 +51,12 @@ class Home extends Component {
                       </p>
                     }
                   >
-                    <Feed
-                        liners={this.props.liners}
-                        linersSetIndex={this.state.linersSetIndex}
-                        authors={this.props.authors}
-                    />
+
+                  <Feed
+                      liners={this.getAuthorLiners()}
+                      linersSetIndex={this.state.linersSetIndex}
+                      authors={this.props.authors}
+                  />
                   </InfiniteScroll>
 
                   {!this.props.liners.length && <div>Sorry, No Liners are available</div>}
@@ -75,18 +71,28 @@ class Home extends Component {
       // 20 more records in 1.5 secs
       setTimeout(() => {
 
-          if (this.state.hasMoreItems) {
-              this.setState({
-                linersSetIndex: this.state.linersSetIndex + 1,
-                hasMoreItems: this.props.liners.length < this.state.linersTotal
-              });
+          this.setState({
+            linersSetIndex: this.state.linersSetIndex + 1,
+            hasMoreItems: this.props.liners.length < this.state.linersTotal
+          });
 
-              this.props.fetchLiners({
-                  linersSetIndex: this.state.linersSetIndex
+          if (this.state.hasMoreItems) {
+              this.props.fetchAuthorLiners({
+                  linersSetIndex: this.state.linersSetIndex,
+                  author: this.getAuthor()
               })
           }
       }, 1500);
     };
+
+    getAuthorLiners() {
+        let author = this.getAuthor()
+        return this.props.liners.filter(liner => liner.author === author.name)
+    }
+
+    getAuthor() {
+        return this.props.authors.filter(author => author.slug === this.props.match.params.slug)[0]
+    }
 }
 
 const mapStateToProps = (state) => {
@@ -98,9 +104,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchLiners: data => dispatch(fetchLinersRequest(data)),
+        fetchAuthorLiners: data => dispatch(fetchAuthorLinersRequest(data)),
         fetchAuthors: data => dispatch(fetchAuthorsRequest(data))
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Author);

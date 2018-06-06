@@ -1,27 +1,37 @@
 import { fromJS } from 'immutable';
-import { SET_LINERS_DATA } from './constants';
+import { REDUCER_NAME, ADD_LINER, SET_LINERS_DATA, SET_AUTHORS_DATA } from './constants';
 
 const initialState = fromJS({
-    liners: []
+    liners: [],
+    authors: []
 })
 
 const AppReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_LINERS_DATA:
-            return state.set('liners', action.payload.data)
+            return state.set('liners', fromJS([...state.get('liners'), ...action.payload.data]))
+
+        case SET_AUTHORS_DATA:
+            return state.set('authors', action.payload.data)
+
+        case ADD_LINER:
+            console.log(action.payload.data);
+            return state.set("liners", state.get('liners').push(action.payload.data));
 
         default:
             return state
     }
 }
 
-export const getAppState = (state) => {
-  if (state.get('liners')) {
-    return state.get('liners');
-  } else {
-    return initialState;
-  }
+
+export const getAppState = state => {
+    if (state[REDUCER_NAME]) {
+        return state[REDUCER_NAME];
+    } else {
+        return initialState;
+    }
 };
+
 
 
 export default AppReducer;

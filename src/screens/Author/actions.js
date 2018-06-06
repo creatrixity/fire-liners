@@ -1,4 +1,11 @@
-import { ADD_LINER_REQUEST, ADD_LINERS_REQUEST, ADD_AUTHORS_REQUEST } from './constants';
+import { ADD_LINER_REQUEST, ADD_AUTHOR_LINERS_REQUEST, ADD_LINERS_REQUEST, ADD_AUTHORS_REQUEST } from './constants';
+
+export const fetchAuthorLinersRequest = data => {
+    return {
+        type: ADD_AUTHOR_LINERS_REQUEST,
+        data
+    }
+}
 
 export const fetchLinersRequest = data => {
     return {

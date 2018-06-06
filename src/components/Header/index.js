@@ -23,8 +23,8 @@ const Brand = props => (
 );
 
 const AddLineButton = props => (
-    <Flex width={1 / 3} justify="right">
-        <Button radius={15} size="small">
+    <Flex width={1 / 3} justify="flex-end">
+        <Button radius={15} size="small" {...props} >
             <Flex>
                 <Icon name="plus"/>
                 <Text mt={1}>New</Text>
@@ -33,14 +33,18 @@ const AddLineButton = props => (
     </Flex>
 );
 
-const Header = props => (
-    <Flex className="App-header" mb={3} justify="center" bg="yellow">
-        <Flex width={[ 0.9, 0.8, 0.6 ]}>
-            <MenuButton />
-            <Brand/>
-            <AddLineButton/>
-        </Flex>
-    </Flex>
-)
+class Header extends React.Component {
+    render () {
+        return (
+            <Flex className="App-header" mb={3} justify="center" bg="yellow">
+                <Flex width={[ 0.9, 0.8, 0.6 ]}>
+                    <MenuButton />
+                    <Brand/>
+                    <AddLineButton onClick={() => this.props.history.push('/add')}/>
+                </Flex>
+            </Flex>
+        )
+    }
+}
 
 export default Header;

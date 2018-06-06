@@ -1,0 +1,32 @@
+[{
+    "name": "Immortal Technique",
+    "slug": "immortal-technique",
+    "government_name": "Felipe Andres Coronel",
+    "photo": "immortal-technique.jpg"
+},
+{
+    "name": "Eminem",
+    "slug": "eminem",
+    "government_name": "Marshall Mathers",
+    "photo": "eminem.jpg"
+},
+
+{
+    "name": "Nas",
+    "slug": "nas",
+    "government_name": "Nasir Oludara Jones",
+    "photo": "nas.jpg"
+},
+
+{
+    "name": "Childish Gambino",
+    "slug": "childish-gambino",
+    "government_name": "Donald Glover",
+    "photo": "childish-gambino.jpg"
+},
+
+{
+    "name": "Andre 3000",
+    "slug": "andre-3000",
+    "photo": "andre-3000.jpg"
+}]
