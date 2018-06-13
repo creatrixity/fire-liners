@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Box, Flex, Label, Select, RedButton, Text } from 'pcln-design-system';
+import { ScaleLoader } from 'react-spinners';
 import Textarea from '../../components/Form/Textarea';
 import { addLiner } from '../Home/actions';
+import { addNotification } from '../../containers/App/actions';
 import { getAppState } from '../../containers/App/reducer';
 
 class AddLine extends Component {
     constructor (props) {
         super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             author: 'Immortal Technique',
-            body: 'The genesis of genocide is like a pagan religion, carefully interwoven  into the holidays of a Christian.'
+            body: 'The genesis of genocide is like a pagan religion, carefully interwoven  into the holidays of a Christian.',
+            isSubmitting: false
         }
     }
 
@@ -25,7 +27,7 @@ class AddLine extends Component {
                 <Flex flexDirection="column" width={[ 0.8, 0.8, 0.5 ]}>
                     <Text bold mb={3} fontSize={3}>Add. The Dopest Lines. Ever.</Text>
                     <Box mb={3}>
-                        <form onSubmit={this.handleSubmit}>
+                        <form onSubmit={e => this.handleSubmit(e)}>
                             <Flex flexDirection="column" mb={3}>
                                 <Label mb={2}>Author</Label>
                                 <Select onChange={e => this.setState({
@@ -42,7 +44,23 @@ class AddLine extends Component {
                                 })} placeholder="Spit that line here, dawg..."></Textarea>
                             </Flex>
 
-                            <RedButton type="submit">Save and go back</RedButton>
+                            <RedButton
+                                disabled={this.state.isSubmitting}
+                                type="submit">
+                                {
+                                    !this.state.isSubmitting ?
+                                    <span>Save and go back</span>:
+                                    <Flex>
+                                        <Text mr={2}>Submitting</Text>
+
+                                        <ScaleLoader
+                                          color={'#fff'}
+                                          height={17}
+                                          loading={true}
+                                        />
+                                    </Flex>
+                                }
+                            </RedButton>
                         </form>
                     </Box>
                 </Flex>
@@ -52,14 +70,23 @@ class AddLine extends Component {
 
     handleSubmit (e) {
         e.preventDefault();
-        let newID = this.props.liners.reduce((maxId, liner) => Math.max(maxId, liner.id), 0) + 1;
-
-        this.props.addLiner({
-            id: newID,
-            author: this.state.author,
-            body: this.state.body
+        this.setState({
+            isSubmitting: true
         })
-        this.props.history.push('/')
+        setTimeout(() => {
+            let newID = this.props.liners.reduce((maxId, liner) => Math.max(maxId, liner.id), 0) + 1;
+
+            this.props.addLiner({
+                id: newID,
+                author: this.state.author,
+                body: this.state.body
+            })
+            this.props.addNotification({
+                type: 'info',
+                message: 'Added new liner.'
+            })
+            this.props.history.push('/')
+        }, 3500)
 
     }
 }
@@ -73,7 +100,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addLiner: data => dispatch(addLiner(data))
+        addLiner: data => dispatch(addLiner(data)),
+        addNotification: data => dispatch(addNotification(data))
     }
 }
 

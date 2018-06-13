@@ -1,9 +1,18 @@
 import { fromJS } from 'immutable';
-import { REDUCER_NAME, ADD_LINER, SET_LINERS_DATA, SET_AUTHORS_DATA } from './constants';
+import {
+    REDUCER_NAME,
+    ADD_LINER,
+    SET_LINERS_DATA,
+    SET_AUTHORS_DATA,
+    ADD_NOTIFICATION,
+    DELETE_NOTIFICATION
+} from './constants';
 
 const initialState = fromJS({
     liners: [],
-    authors: []
+    linersCount: 0,
+    authors: [],
+    notifications: []
 })
 
 const AppReducer = (state = initialState, action) => {
@@ -15,8 +24,34 @@ const AppReducer = (state = initialState, action) => {
             return state.set('authors', action.payload.data)
 
         case ADD_LINER:
-            console.log(action.payload.data);
             return state.set("liners", state.get('liners').push(action.payload.data));
+
+        case ADD_NOTIFICATION:
+            let notification = {
+                id: state.get('notifications')
+                    .toJS()
+                    .reduce((largest, current) => Math.max(largest, current.id), 0) + 1,
+                ...action.payload.data
+            }
+            return state.set(
+                "notifications",
+                fromJS(
+                    state
+                    .get('notifications')
+                    .push(notification)
+                )
+            );
+
+        case DELETE_NOTIFICATION:
+            console.log(action)
+            return state.set(
+                "notifications",
+                fromJS(
+                    state
+                    .get('notifications')
+                    .filter(notification => notification.id !== action.payload.data.id)
+                )
+            );
 
         default:
             return state

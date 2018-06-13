@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { SyncLoader } from 'react-spinners';
+
 import {
     Box,
     Flex,
@@ -18,7 +20,8 @@ class Home extends Component {
         this.state = {
             linersSetIndex: 0,
             hasMoreItems: true,
-            linersTotal: 0
+            linersTotal: 0,
+            isLoadingLiners: true
         }
     }
 
@@ -36,20 +39,38 @@ class Home extends Component {
         this.props.fetchLiners({
             linersSetIndex: this.state.linersSetIndex
         })
+
+        setTimeout(() => {
+            this.setState({
+                isLoadingLiners: false
+            })
+        }, 3500)
     }
 
     render() {
         return (
             <Flex justify="center" alignItems="center">
 
-              <Box width={[ 0.9, 0.8, 0.6 ]} p={3}>
+              <Box width={[ 0.9, 0.8, 0.5 ]} p={3}>
                   <Heading fontSize={3} mb={3} bold>Recent Quotes</Heading>
 
                   <InfiniteScroll
                     dataLength={this.props.liners.length}
                     next={this.fetchMoreData}
                     hasMore={this.state.hasMoreItems}
-                    loader={<h4 style={{textAlign: 'center'}}>Loading...</h4>}
+                    style={{
+                        height: 'inherit !important',
+                        'overflow': 'hidden !important'
+                    }}
+                    loader={
+                        <Flex justify="center" alignItems="center">
+                            <SyncLoader
+                              color={'#a1a1a1'}
+                              size={10}
+                              loading={true}
+                            />
+                        </Flex>
+                    }
                     endMessage={
                       <p style={{textAlign: 'center'}}>
                         <b>Homie, you done seen all the liners we got.</b>
@@ -60,6 +81,7 @@ class Home extends Component {
                         liners={this.props.liners}
                         linersSetIndex={this.state.linersSetIndex}
                         authors={this.props.authors}
+                        isLoading={this.state.isLoadingLiners}
                     />
                   </InfiniteScroll>
 
@@ -73,16 +95,24 @@ class Home extends Component {
     fetchMoreData = () => {
       // a fake async api call like which sends
       // 20 more records in 1.5 secs
+      this.setState({
+          isLoadingLiners: true
+      })
+
       setTimeout(() => {
 
           if (this.state.hasMoreItems) {
               this.setState({
                 linersSetIndex: this.state.linersSetIndex + 1,
-                hasMoreItems: this.props.liners.length < this.state.linersTotal
+                hasMoreItems: this.props.liners.length < this.state.linersTotal,
               });
 
               this.props.fetchLiners({
                   linersSetIndex: this.state.linersSetIndex
+              })
+
+              this.setState({
+                  isLoadingLiners: false
               })
           }
       }, 1500);

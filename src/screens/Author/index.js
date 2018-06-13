@@ -17,7 +17,8 @@ class Author extends Component {
         this.state = {
             linersSetIndex: 0,
             hasMoreItems: true,
-            linersTotal: 0
+            linersTotal: 0,
+            isLoadingLiners: true
         }
     }
 
@@ -31,6 +32,13 @@ class Author extends Component {
             linersSetIndex: this.state.linersSetIndex,
             author: this.getAuthor()
         })
+
+        setTimeout(() => {
+            this.setState({
+                isLoadingLiners: false
+            })
+        }, 3500)
+
     }
 
     render() {
@@ -56,6 +64,7 @@ class Author extends Component {
                       liners={this.getAuthorLiners()}
                       linersSetIndex={this.state.linersSetIndex}
                       authors={this.props.authors}
+                      isLoading={this.state.isLoadingLiners}
                   />
                   </InfiniteScroll>
 
@@ -69,6 +78,11 @@ class Author extends Component {
     fetchMoreData = () => {
       // a fake async api call like which sends
       // 20 more records in 1.5 secs
+
+      this.setState({
+          isLoadingLiners: true
+      })
+
       setTimeout(() => {
 
           this.setState({
@@ -81,6 +95,11 @@ class Author extends Component {
                   linersSetIndex: this.state.linersSetIndex,
                   author: this.getAuthor()
               })
+
+              this.setState({
+                  isLoadingLiners: false
+              })
+
           }
       }, 1500);
     };
