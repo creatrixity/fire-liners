@@ -43,7 +43,6 @@ const AppReducer = (state = initialState, action) => {
             );
 
         case DELETE_NOTIFICATION:
-            console.log(action)
             return state.set(
                 "notifications",
                 fromJS(

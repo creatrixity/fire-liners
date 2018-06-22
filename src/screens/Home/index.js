@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { SyncLoader } from 'react-spinners';
+import { debounce } from 'lodash';
 
 import {
     Box,
@@ -21,8 +22,11 @@ class Home extends Component {
             linersSetIndex: 0,
             hasMoreItems: true,
             linersTotal: 0,
-            isLoadingLiners: true
+            isLoadingLiners: true,
+            activeAuthorCard: null
         }
+
+        this.setActiveAuthorCard = debounce(this.setActiveAuthorCard, 200)
     }
 
     componentDidMount() {
@@ -82,6 +86,9 @@ class Home extends Component {
                         linersSetIndex={this.state.linersSetIndex}
                         authors={this.props.authors}
                         isLoading={this.state.isLoadingLiners}
+                        activeAuthorCard={this.state.activeAuthorCard}
+                        onAuthorMouseOver={index => this.setActiveAuthorCard(index)}
+                        onAuthorMouseLeave={index => this.setActiveAuthorCard(null)}
                     />
                   </InfiniteScroll>
 
@@ -91,6 +98,10 @@ class Home extends Component {
             </Flex>
         )
     }
+
+    setActiveAuthorCard = index => this.setState({
+        activeAuthorCard: index
+    })
 
     fetchMoreData = () => {
       // a fake async api call like which sends
